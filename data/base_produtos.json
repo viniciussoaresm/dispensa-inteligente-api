@@ -1,0 +1,60 @@
+{
+  "produtos": [
+    {
+      "nome": "Banana",
+      "validade_dias_geladeira": 7,
+      "validade_dias_ambiente": 3,
+      "observacoes": "Manter em local fresco e arejado.",
+      "categoria_id": 1
+    },
+    {
+      "nome": "Ma\u00e7\u00e3",
+      "validade_dias_geladeira": 20,
+      "validade_dias_ambiente": 10,
+      "observacoes": "Manter em local fresco ou refrigerar para durar mais.",
+      "categoria_id": 1
+    }
+  ],
+  "categorias": [
+    {
+      "id": 1,
+      "nome": "Frutas"
+    },
+    {
+      "id": 2,
+      "nome": "Verduras"
+    },
+    {
+      "id": 3,
+      "nome": "Carnes"
+    },
+    {
+      "id": 4,
+      "nome": "Latic\u00ednios"
+    },
+    {
+      "id": 5,
+      "nome": "Gr\u00e3os"
+    },
+    {
+      "id": 6,
+      "nome": "Doces e chocolates"
+    },
+    {
+      "id": 7,
+      "nome": "Bebidas"
+    },
+    {
+      "id": 8,
+      "nome": "P\u00e3es"
+    },
+    {
+      "id": 9,
+      "nome": "Condimentos"
+    },
+    {
+      "id": 10,
+      "nome": "Produtos industrializados"
+    }
+  ]
+}

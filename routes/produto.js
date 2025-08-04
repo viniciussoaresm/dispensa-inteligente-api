@@ -1,23 +1,32 @@
 
+// routes/produtos.js
 import express from "express";
-import { produtos, categorias } from "../data/base_produtos.json" assert { type: "json" };
+import Produto from "../models/Produto.js";
 
 const router = express.Router();
 
-// Busca produto por nome (case insensitive)
-router.get('/:nome', (req, res) => {
-  const nomeBusca = req.params.nome.toLowerCase();
-  const produto = produtos.find(p => p.nome.toLowerCase() === nomeBusca);
-  if (produto) {
-    res.json(produto);
-  } else {
-    res.status(404).json({ mensagem: "Produto não encontrado." });
+// Retorna todos os produtos
+router.get("/", async (req, res) => {
+  try {
+    const produtos = await Produto.find().exec();
+    res.json(produtos);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar produtos." });
   }
 });
 
-// Retorna todas as categorias
-router.get('/categorias', (req, res) => {
-  res.json(categorias);
+// Buscar produto por nome (ex: /produtos/banana)
+router.get("/:nome", async (req, res) => {
+  try {
+    const nome = req.params.nome;
+    const produto = await Produto.findOne({ nome: new RegExp(nome, "i") }).exec();
+    if (!produto) {
+      return res.status(404).json({ error: "Produto não encontrado." });
+    }
+    res.json(produto);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar produto." });
+  }
 });
 
 export default router;

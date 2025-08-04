@@ -5,6 +5,7 @@ import admin from "firebase-admin";
 import dotenv from "dotenv";
 import produtoRoutes from "./routes/produto.js";
 import dispensaRoutes from "./routes/dispensa.js";
+import categoriasRoutes from "./routes/categorias.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((err) => console.error("Erro MongoDB:", err));
 
 app.use("/produto", produtoRoutes);
+app.use("/categorias", categoriasRoutes);
 app.use("/dispensa", dispensaRoutes);
 
 const PORT = process.env.PORT || 3000;

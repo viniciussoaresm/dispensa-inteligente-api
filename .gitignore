@@ -1,9 +1,11 @@
 .env
-.node_modules
-.node_modules/*
+/node_modules
 .DS_Store
 .vscode
 coverage
 dist
 npm-debug.log
 yarn-error.log 
+package-lock.json
+yarn.lock
+.idea   

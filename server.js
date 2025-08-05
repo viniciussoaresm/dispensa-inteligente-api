@@ -7,8 +7,11 @@ import produtoRoutes from "./routes/produto.js";
 import dispensaRoutes from "./routes/dispensa.js";
 import categoriasRoutes from "./routes/categorias.js";
 import usuarioRoutes from "./routes/usuario.js";
-import serviceAccount from "./serviceAccountKey.json" assert { type: "json" };
+import { createRequire } from "module";
 
+const require = createRequire(import.meta.url);
+
+const serviceAccount = require("./serviceAccountKey.json");
 
 
 dotenv.config();

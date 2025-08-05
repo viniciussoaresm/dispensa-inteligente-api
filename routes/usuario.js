@@ -22,10 +22,11 @@ router.post("/login", async (req, res) => {
     );
 
     res.status(200).json({
-      mensagem: "Login bem-sucedido",
-      token: response.data.idToken, // token JWT para usar como Bearer
+      token: response.data.idToken,
+      name: response.data.displayName,
+      email: response.data.email,
+      expiresIn: response.data.expiresIn,
       refreshToken: response.data.refreshToken,
-      uid: response.data.localId,
     });
   } catch (erro) {
     res.status(401).json({

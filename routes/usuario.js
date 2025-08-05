@@ -1,5 +1,5 @@
 // routes/usuario.js
-import express from "express";
+import express, { Router } from "express";
 import admin from "firebase-admin";
 
 const router = express.Router();
@@ -99,4 +99,4 @@ router.post("/cadastro", async (req, res) => {
   }
 });
 
-export default router;
+export default Router;

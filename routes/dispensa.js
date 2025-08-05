@@ -1,43 +1,59 @@
-
+// routes/dispensa.js
 import express from "express";
-import { verificarToken } from "../middlewares/auth.js";
-import ProdutoDespensa from "../models/ProdutoDespensa.js";
+import DespensaItem from "../models/despensaItem.js";
+import authMiddleware from "../middlewares/auth.js"; // middleware JWT que seta req.user
 
 const router = express.Router();
 
-// Adicionar produto na despensa do usuário autenticado
-router.post("/", verificarToken, async (req, res) => {
-  const { nome, quantidade, dataEntrada } = req.body;
-  const uid = req.usuario.uid;
+// Middleware para garantir que só acessa com token válido
+router.use(authMiddleware);
 
-  if (!nome || !quantidade) {
-    return res.status(400).json({ mensagem: "Nome e quantidade são obrigatórios." });
-  }
-
+// GET /dispensa - lista itens da despensa do usuário logado
+router.get("/", async (req, res) => {
   try {
-    const produto = new ProdutoDespensa({
-      uid,
-      nome,
-      quantidade,
-      dataEntrada: dataEntrada ? new Date(dataEntrada) : new Date(),
-    });
-
-    await produto.save();
-    res.status(201).json({ mensagem: "Produto adicionado à despensa.", produto });
-  } catch (err) {
-    res.status(500).json({ mensagem: "Erro ao salvar produto.", erro: err.message });
+    const itens = await DespensaItem.find({ userId: req.user.uid }).exec();
+    res.json(itens);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar despensa" });
   }
 });
 
-// Listar produtos da despensa do usuário autenticado
-router.get("/", verificarToken, async (req, res) => {
-  const uid = req.usuario.uid;
+// POST /dispensa - adiciona produto à despensa do usuário logado
+router.post("/", async (req, res) => {
+  const { nome, quantidade, dataEntrada, validade, categoria, observacoes } = req.body;
+
+  if (!nome || !quantidade) {
+    return res.status(400).json({ error: "Nome e quantidade são obrigatórios" });
+  }
 
   try {
-    const produtos = await ProdutoDespensa.find({ uid }).sort({ dataEntrada: -1 });
-    res.json(produtos);
-  } catch (err) {
-    res.status(500).json({ mensagem: "Erro ao buscar produtos.", erro: err.message });
+    const novoItem = new DespensaItem({
+      userId: req.user.uid,
+      nome,
+      quantidade,
+      dataEntrada: dataEntrada ? new Date(dataEntrada) : new Date(),
+      validade: validade ? new Date(validade) : undefined,
+      categoria,
+      observacoes,
+    });
+
+    await novoItem.save();
+    res.status(201).json({ mensagem: "Item adicionado à despensa", item: novoItem });
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao adicionar item" });
+  }
+});
+
+// DELETE /dispensa/:id - remove item da despensa
+router.delete("/:id", async (req, res) => {
+  try {
+    const item = await DespensaItem.findOneAndDelete({ _id: req.params.id, userId: req.user.uid });
+    if (!item) {
+      return res.status(404).json({ error: "Item não encontrado" });
+    }
+    res.json({ mensagem: "Item removido", item });
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao remover item" });
   }
 });
 

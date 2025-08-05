@@ -33,4 +33,22 @@ router.get("/:nome", async (req, res) => {
   }
 });
 
+router.get('/recomendados/:search', async (req, res) => {
+  try {
+    const search = req.params.search;
+
+    if (!search) {
+      return res.status(400).json({ erro: 'Parâmetro "search" é obrigatório' });
+    }
+
+    const produtos = await Produto.find({
+      nome: new RegExp(search, 'i'),
+    }).limit(10); 
+
+    res.json(produtos);
+  } catch (erro) {
+    res.status(500).json({ erro: 'Erro ao buscar recomendações' });
+  }
+});
+
 export default router;

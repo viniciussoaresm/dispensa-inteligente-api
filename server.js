@@ -26,18 +26,7 @@ admin.initializeApp({
 
 // Conexão MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(async () => {
-        const collections = await mongoose.connection.db.listCollections().toArray();
-    console.log("Coleções existentes:");
-    collections.forEach((col) => console.log(`- ${col.name}`));
-  })
   .catch((err) => console.error("Erro MongoDB:", err));
-
-
-  // Após a conexão e registro dos models...
-console.log("Models registrados:", mongoose.modelNames());
-
-
 
 app.use("/produtos", produtoRoutes);
 app.use("/categorias", categoriasRoutes);

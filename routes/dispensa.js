@@ -1,4 +1,3 @@
-// routes/dispensa.js
 import express from "express";
 import DespensaItem from "../models/despensaItem.js";
 import authMiddleware from "../middlewares/auth.js"; // middleware JWT que seta req.user

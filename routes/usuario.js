@@ -1,6 +1,6 @@
-// routes/usuario.js
-import express, { Router } from "express";
 import admin from "firebase-admin";
+import axios from "axios";
+import express from "express";
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.post("/login", async (req, res) => {
 
   try {
     const response = await axios.post(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API_KEY}`,
+      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.FIREBASE_API_KEY}`,
       {
         email,
         password,
@@ -99,4 +99,4 @@ router.post("/cadastro", async (req, res) => {
   }
 });
 
-export default Router;
+export default router;

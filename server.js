@@ -7,6 +7,7 @@ import produtoRoutes from "./routes/produto.js";
 import dispensaRoutes from "./routes/dispensa.js";
 import categoriasRoutes from "./routes/categorias.js";
 import usuarioRoutes from "./routes/usuario.js";
+import serviceAccount from "./serviceAccountKey.json" assert { type: "json" };
 
 
 
@@ -16,12 +17,15 @@ const app = express();
 app.use(express.json());
 
 // Firebase Admin SDK init
+// admin.initializeApp({
+//   credential: admin.credential.cert({
+//     projectId: process.env.FIREBASE_PROJECT_ID,
+//     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+//     privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+//   }),
+// });
 admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\n/g, '\n'),
-  }),
+  credential: admin.credential.cert(serviceAccount),
 });
 
 // Conexão MongoDB
@@ -35,3 +39,13 @@ app.use("/usuario", usuarioRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+
+app.get("/test-firebase", async (req, res) => {
+  try {
+    const users = await admin.auth().listUsers(1);
+    res.json({ usersCount: users.users.length });
+  } catch (error) {
+    console.error("Erro Firebase:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
